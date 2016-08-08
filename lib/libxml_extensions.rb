@@ -71,8 +71,8 @@ class LibXML::XML::Document
     node = LibXML::XML::Node.new name, content && content.to_s, ns
 
     if attr_hash
-      attr_hash.each do |name_with_opt_prefix, val|
-        ns, name = root.ns_parse_name name_with_opt_prefix
+      attr_hash.each do |sub_name_with_opt_prefix, val|
+        ns, name = root.ns_parse_name sub_name_with_opt_prefix
         LibXML::XML::Attr.ns_new node, name, val, ns
       end
     end

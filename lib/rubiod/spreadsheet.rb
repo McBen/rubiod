@@ -5,7 +5,7 @@ module Rubiod
     def initialize string_or_io
       super
 
-      @x_content = Zip::ZipFile.open(@filename) do |zip|
+      @x_content = Zip::File.open(@filename) do |zip|
         LibXML::XML::Document.io zip.get_input_stream('content.xml')
       end
 
@@ -21,7 +21,7 @@ module Rubiod
 
     def save path=nil
       FileUtils.cp(@filename, path) if path
-      Zip::ZipFile.open(path || @filename) do |zip|
+      Zip::File.open(path || @filename) do |zip|
         zip.get_output_stream('content.xml') do |f|
           f.write @x_content
         end

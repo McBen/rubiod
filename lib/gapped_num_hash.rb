@@ -21,11 +21,11 @@ class GappedNumHash
   # num must belong to non-atom key, and it's 'width' must be > +by+
   # returns pair [key, val]
   def taper num, by=1
-    key, some_val, ind = find_pair num
+    key, _, ind = find_pair num
     raise ArgumentError if key.nil? || key.count <= by
 
     @pairs[ind][0] = key.first+by..key.last
-    move_keys -by, ind
+    move_keys (-by), ind
     @pairs[ind]
   end
 
@@ -33,7 +33,7 @@ class GappedNumHash
   def delete num
     key, val, ind = find_pair num
     if key
-      move_keys -1, ind
+      move_keys (-1), ind
       @pairs.delete_at ind
       [key, val]
     end
@@ -42,7 +42,7 @@ class GappedNumHash
   # num must belong to atom key
   # returns pair [key, val]
   def insert_after num, val
-    key, some_val, ind = find_pair num
+    key, _, ind = find_pair num
     raise ArgumentError unless key && key.atom?
 
     ins_ind = ind + 1
@@ -55,7 +55,7 @@ class GappedNumHash
   # num must belong to non-atom key
   # val_hash - { :left => smth, :mid => smth, :right => smth }
   def insert_split num, val_hash
-    key, some_val, ind = find_pair(num)
+    key, _, ind = find_pair(num)
     raise ArgumentError if key.nil? || key.atom?
 
     new_pairs = []

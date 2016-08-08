@@ -56,7 +56,7 @@ module Rubiod
       @x_cell.each_attr do |a|
         a.remove! unless a.name == 'style-name' # TODO: ns equality check
       end
-      @x_cell.each &:remove!
+      @x_cell.each(&:remove!)
       @x_cell.ns_set_attr 'office:value-type', 'string'
       @x_cell << @x_cell.doc.ns_create_node('text:p', data)
       data

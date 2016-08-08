@@ -26,10 +26,11 @@ require 'gapped_num_hash'
 require 'libxml'
 require 'libxml_extensions'
 
-require 'zip/zipfilesystem'
+require 'zip'
 require 'fileutils'
 
 module Rubiod
+  require 'rubiod/version'
   require 'rubiod/document'
   require 'rubiod/spreadsheet'
   require 'rubiod/worksheet'
