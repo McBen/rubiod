@@ -1,4 +1,4 @@
-class GappedNumHash
+class RangeHash
   def initialize
     @pairs = [] # consists of [key, val]; key - [Range] x..y
   end
@@ -67,25 +67,23 @@ class GappedNumHash
   end
 
   # returns pair [key, val] or nil (when new key overlaps existing ones)
-  def insert num_or_range, val
-    key = Range(num_or_range)
-    unless key.atom?
-      left, right = find_pair(key.first), find_pair(key.last)
-      unless left[0] || right[0]
-        if left[1] == right[1]
-          pair = [key, val]
-          @pairs[left[1]...left[1]] = [pair]
-          pair
-        else
-          nil
-        end
+  def insert key, val
+    raise "illegal key" unless key.is_a? (Range)
+    
+    left, right = find_pair(key.first), find_pair(key.last)
+    unless left[0] || right[0]
+      if left[1] == right[1]
+        pair = [key, val]
+        @pairs[left[1]...left[1]] = [pair]
+        pair
       else
         nil
       end
     else
-      [key, self.[]=(key.first, val)]
+      nil
     end
   end
+
 
   # returns val or nil
   def [] num

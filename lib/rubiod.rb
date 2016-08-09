@@ -21,7 +21,7 @@
 #++
 
 require 'ruby_extensions'
-require 'gapped_num_hash'
+require 'range_hash'
 
 require 'libxml'
 require 'libxml_extensions'

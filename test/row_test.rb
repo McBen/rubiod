@@ -28,6 +28,12 @@ describe "Row" do
     assert_equal(NEW_TEXT, @row[0])
    end
 
+  it "should write new cell" do
+    skip() # FIXME can't insert a new cell
+    @row[5] = NEW_TEXT
+    assert_equal(NEW_TEXT, @row[5])
+   end
+
   it "should get count of cells in row" do
     assert_equal(5, @row.cellnum)
     assert_equal(5, @row_repeated.cellnum)

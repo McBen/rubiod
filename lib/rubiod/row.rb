@@ -6,17 +6,13 @@ module Rubiod
       @worksheet = worksheet
       @x_row = x_row
 
-      @cell_refs = GappedNumHash.new
+      @cell_refs = RangeHash.new
       cur_index = 0
       @x_row.each_element do |x_cell|
         cell = Cell.new(self, x_cell)
-        if rep = cell.repeated?
-          @cell_refs.insert cur_index..cur_index+rep-1, cell
-          cur_index += rep
-        else
-          @cell_refs.insert cur_index, cell
-          cur_index += 1
-        end
+        rep = cell.repeated? || 1
+        @cell_refs.insert cur_index..cur_index+rep-1, cell
+        cur_index += rep
       end
     end
 
