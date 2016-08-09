@@ -1,6 +1,6 @@
 class RangeHash
   def initialize
-    @pairs = [] # consists of [key, val]; key - [Range] x..y
+    @pairs = []
   end
 
   def each &block
@@ -33,7 +33,7 @@ class RangeHash
   def delete num
     key, val, ind = find_pair num
     if key
-      move_keys (-1), ind
+      move_keys (-key.size), ind
       @pairs.delete_at ind
       [key, val]
     end
@@ -68,8 +68,8 @@ class RangeHash
 
   # returns pair [key, val] or nil (when new key overlaps existing ones)
   def insert key, val
-    raise "illegal key" unless key.is_a? (Range)
-    
+    raise ArgumentError unless key.is_a?(Range) && not(key.exclude_end?)
+
     left, right = find_pair(key.first), find_pair(key.last)
     unless left[0] || right[0]
       if left[1] == right[1]
@@ -83,7 +83,6 @@ class RangeHash
       nil
     end
   end
-
 
   # returns val or nil
   def [] num
@@ -114,7 +113,7 @@ class RangeHash
   def move_keys direction, start_index=0
     (start_index...@pairs.size).each do |i|
       pair = @pairs[i]
-      pair[0] = pair[0].move direction
+      pair[0] = pair[0].first+direction..pair[0].last+direction
     end
   end
 

@@ -42,8 +42,9 @@ describe "Row" do
 
   it "should reduce repeated row" do
     @table.delete 3
+    assert_equal( 2, @table[3].repeated? )
     @table.delete 3
-    refute (@table[3].repeated?)
+    refute @table[3].repeated?
    end
 
 end
