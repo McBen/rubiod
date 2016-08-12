@@ -55,6 +55,10 @@ module Rubiod
       end
     end
 
+    def get_row_count
+      @row_refs.last_index
+    end
+
   end
 
 end

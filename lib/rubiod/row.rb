@@ -35,7 +35,7 @@ module Rubiod
         cell.set_data val
       else
         cells = cell.send :insert_split, ind-key.first, val
-        @cell_refs.insert_split ind, cells
+        @cell_refs.split ind, cells
         val
       end
     end

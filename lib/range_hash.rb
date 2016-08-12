@@ -1,4 +1,5 @@
 class RangeHash
+
   def initialize
     @pairs = []
   end
@@ -25,7 +26,7 @@ class RangeHash
     raise ArgumentError if key.nil? || key.count <= by
 
     @pairs[ind][0] = key.first+by..key.last
-    move_keys (-by), ind
+    move_keys(-by, ind)
     @pairs[ind]
   end
 
@@ -33,7 +34,7 @@ class RangeHash
   def delete num
     key, val, ind = find_pair num
     if key
-      move_keys (-key.size), ind
+      move_keys(-key.size, ind)
       @pairs.delete_at ind
       [key, val]
     end
@@ -53,8 +54,8 @@ class RangeHash
   end
 
   # num must belong to non-atom key
-  # val_hash - { :left => smth, :mid => smth, :right => smth }
-  def insert_split num, val_hash
+  # val_hash - { :left => smth, :mid => smth, :rigit aght => smth }
+  def split num, val_hash
     key, _, ind = find_pair(num)
     raise ArgumentError if key.nil? || key.atom?
 
@@ -93,17 +94,16 @@ class RangeHash
   # may cause splitting
   # returns val
   def []= num, val
-    f = find_pair num
-    key = f[0]
+    key, kval, ind = find_pair num
     if key
       if key.atom?
-        @pairs[f[2]] = val
+        @pairs[ind] = val
       else
-        insert_split num, { :left => f[1], :mid => val, :right => f[1] }
+        split num, { :left => kval, :mid => val, :right => kval }
         val
       end
     else # can make gaps between keys - quite unsafe
-      @pairs[f[1]...f[1]] = [[num..num, val]]
+      @pairs[key...key] = [[num..num, val]]
       val
     end
   end
