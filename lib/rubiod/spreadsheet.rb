@@ -20,13 +20,31 @@ module Rubiod
     end
 
     def save path=nil
-      FileUtils.cp(@filename, path) if path
-      Zip::File.open(path || @filename) do |zip|
-        zip.get_output_stream('content.xml') do |f|
-          f.write @x_content
+      ::File.open(path || @filename, "wb") {|f| f.write( generate ) }
+    end
+
+    def generate
+      buffer = Zip::OutputStream.write_buffer do |out|
+
+        Zip::File.open(@filename) do |file|
+          file.each do |entry|
+
+            next if entry.directory?
+            entry.get_input_stream do |is|
+
+              data = is.sysread
+              data = @x_content.to_s(indent: false) if entry.name=='content.xml'
+                
+              out.put_next_entry(entry.name)
+              out.write data
+            end
+          end
         end
       end
+
+      buffer.string
     end
+
 
     attr_reader :worksheets
 

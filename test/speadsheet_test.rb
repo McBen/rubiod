@@ -32,7 +32,6 @@ describe "Spreadsheet" do
 
 
   it "should generate file data" do
-    skip("not implemented")
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
     refute_nil( spread.generate )
    end

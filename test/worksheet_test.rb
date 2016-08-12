@@ -30,6 +30,7 @@ describe "Worksheet" do
 
 
   it "should read&write new cell by splitting" do
+  
     @table[1,3] = TEXT
     assert_equal(TEXT, @table[1,3])
    end
