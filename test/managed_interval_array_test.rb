@@ -209,4 +209,24 @@ describe "ManagedIntervalArray" do
     assert_equal( "C3", @marray[7].status )
    end
 
+  it "should create a new item at the end if we try to get an isolated one" do
+    @marray.prepareForChange(20)
+    assert_equal( 21, @marray.size )
+  end
+
+  it "should give the current object if it is already a single object" do
+    old_value = @marray[6]
+    value = @marray.prepareForChange(6)
+    assert_equal( old_value, value )
+  end
+
+  it "should isolate one item of a repeated object" do
+    @marray.prepareForChange(3)
+
+    assert_equal( 1, @marray.countOf(3) )
+
+    assert_equal( 1, @marray[1].value )
+    assert_equal( 1, @marray[4].value )
+  end
+
 end

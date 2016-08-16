@@ -16,8 +16,8 @@ class ManagedIntervalArray
     end
   end
 
-  def [] index
-    idx = find_index(index)
+  def [] num
+    idx = find_index(num)
     idx && @objects[idx]
   end
 
@@ -35,7 +35,6 @@ class ManagedIntervalArray
     raise ArgumentError unless index
 
     moveBounds(index, -1)
-
     new_count = countOfAt(index)
     if new_count == 0 then
       @objects[index].send :delete!
@@ -95,6 +94,7 @@ class ManagedIntervalArray
     return new_item
   end
 
+
   def splitObject index, num
     start = @bounds[index-1]
     len = countOfAt(index)
@@ -111,6 +111,23 @@ class ManagedIntervalArray
     @bounds.insert index, num
   end  
 
+
+  def prepareForChange num
+    if num >= size then
+      return appendItemAtEnd(num,1)
+    end
+
+    index = find_index num
+    raise IndexError unless index
+
+    len = countOfAt(index)
+    return @objects[index]  if len==1
+
+    new_item = insert(num)
+    delete(num+1)
+
+    return new_item
+  end
 
 #############
 

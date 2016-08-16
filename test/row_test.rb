@@ -16,7 +16,6 @@ describe "Row" do
     refute_nil (@row)
    end
 
-
   it "should recognize repeated rows" do
     assert (@row_repeated.repeated?)
     assert_equal(3, @row_repeated.repeated?)
@@ -28,19 +27,13 @@ describe "Row" do
     assert_equal(NEW_TEXT, @row[0])
    end
 
-  it "should write new cell" do
-    skip() # FIXME can't insert a new cell
-    @row[5] = NEW_TEXT
-    assert_equal(NEW_TEXT, @row[5])
-   end
-
   it "should get count of cells in row" do
     assert_equal(5, @row.cellnum)
     assert_equal(5, @row_repeated.cellnum)
    end
 
-
   it "should reduce repeated row" do
+    assert_equal( 3, @table[3].repeated? )
     @table.delete 3
     assert_equal( 2, @table[3].repeated? )
     @table.delete 3

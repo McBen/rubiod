@@ -30,11 +30,18 @@ describe "Worksheet" do
 
 
   it "should read&write new cell by splitting" do
-  
     @table[1,3] = TEXT
     assert_equal(TEXT, @table[1,3])
    end
 
+  it "should split a repeated row if a line is altered" do
+    assert @table[3].repeated?
+
+    @table[3,1]=NEW_TEXT
+    assert_equal(NEW_TEXT, @table[3,1])
+
+    refute @table[3].repeated?
+   end
 
   it "should read&write new cell by adding cell" do
     skip
@@ -44,7 +51,6 @@ describe "Worksheet" do
 
 
   it "should read&write new cell by creating new row" do
-    skip
     assert(@table[4].repeated?)
     @table[4,0] = TEXT
     assert_equal(TEXT, @table[4,0])
@@ -52,7 +58,7 @@ describe "Worksheet" do
 
   it "should get count of rows" do
     count = @table.get_row_count
-    assert_equal(8, count)
+    assert_equal(9, count)
    end
 
 
@@ -75,7 +81,6 @@ describe "Worksheet" do
 
 
   it "should delete a repeated row " do
-    skip
     @table.delete 4
     assert_equal(@row_count-1, @table.get_row_count)
    end

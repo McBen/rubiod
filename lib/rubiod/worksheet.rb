@@ -6,13 +6,12 @@ module Rubiod
       @spreadsheet = spreadsheet
       @x_table = x_table
 
-      @row_refs = RangeHash.new
-      cur_index = 0
+      @row_refs = ManagedIntervalArray.new
+
       @x_table.ns_elements.select{ |n| n.name == 'table-row' }.each do |x_row|
         row = Row.new(self, x_row)
-        rep = row.repeated? || 1
-        @row_refs.insert cur_index..cur_index+rep-1, row
-        cur_index += rep
+        count = row.repeated? || 1
+        @row_refs.add row,count
       end
     end
 
@@ -23,42 +22,24 @@ module Rubiod
     end
 
     def []= row, col, val
-      rw = @row_refs[row]
-      return if rw.nil? || rw.repeated? # not to leave (repeated)
+      rw = @row_refs.prepareForChange(row)
       rw[col] = val
     end
 
     # inserts a row after specified, copying last's formatting
     # return new row or nil
     def insert row_ind
-      row = @row_refs[row_ind]
-      return if row.nil? || row.repeated?
-      @row_refs.insert_after(row_ind, row.send(:insert_after))[1]
+      @row_refs.insert(row_ind)
     end
 
     # deletes specified row
-    # returns self or nil
     def delete row_ind
-      key, row = @row_refs.at row_ind
-      return unless key
-
-      if key.atom?
-        if @row_refs.delete row_ind
-          row.send :remove!
-          self
-        end
-      else
-        if row.send :reduce_repeated
-          @row_refs.taper row_ind
-          self
-        end
-      end
+      @row_refs.delete(row_ind)
     end
 
     def get_row_count
-      @row_refs.last_index
+      @row_refs.size
     end
-
   end
 
 end
