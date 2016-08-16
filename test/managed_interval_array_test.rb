@@ -10,6 +10,8 @@ class TestManagedObject
     @status = ''
   end
 
+  private
+
   def duplicate
     # NB: must copy count!
     #     new item must be created BEHIND old

@@ -1,16 +1,19 @@
 class ManagedIntervalArray
 
-# TODO: insert dummy element (referenz to element 1) at 0; this will eliminate many index>0 conditions
 
   def initialize
-    @objects = []
-    @bounds = []
+    @objects = [nil]
+    @bounds = [0]
   end
 
   def add object, count=1
     raise ArgumentError if count<1
     @objects.push object
     @bounds.push size+count
+
+    if @objects.size==2 then
+      @objects[0] = @objects[1]
+    end
   end
 
   def [] index
@@ -19,7 +22,7 @@ class ManagedIntervalArray
   end
 
   def size
-    @bounds.last || 0
+    @bounds.last
   end
 
   def countOf num
@@ -35,11 +38,11 @@ class ManagedIntervalArray
 
     new_count = countOfAt(index)
     if new_count == 0 then
-      @objects[index].delete!
+      @objects[index].send :delete!
       @objects.delete_at index
       @bounds.delete_at index
     else
-      @objects[index].setCount(new_count)
+      @objects[index].send :setCount, new_count
     end
   end
 
@@ -47,29 +50,31 @@ class ManagedIntervalArray
     (start...@bounds.size).each { |i| @bounds[i]+=diff }
   end
 
-
   def insert num, count =1
     if num >= size then
       return appendItemAtEnd(num,count)
     end
 
-    if num==0 then
-      return insertItemAtBegining(count)
-    end
-
     index = find_index num
     raise ArgumentError unless index
 
-    start = startOfAt(index)
+    start = @bounds[index-1]
     if start < num then
       splitObject(index,num)
       index+=1
     end
 
     raise RuntimeError if index<1
-    new_item = @objects[index-1].duplicate
-    new_item.setCount(count)
-    @objects.insert(index, new_item)
+    new_item = @objects[index-1].send :duplicate
+
+    if index==1 then # if insert at beginning we have to swap 
+      @objects.insert(index+1, new_item)
+      new_item = @objects[1]
+    else
+      @objects.insert(index, new_item)
+    end
+    new_item.send :setCount, count
+
 
     @bounds.insert(index, num)
     moveBounds(index, count)
@@ -79,39 +84,29 @@ class ManagedIntervalArray
 
   def appendItemAtEnd position, count
     if position > size then
-      new_item = @objects.last.duplicate
-      new_item.setCount position-size
+      new_item = @objects.last.send :duplicate
+      new_item.send :setCount, position-size
       add new_item, position-size
     end
 
-    new_item = @objects.last.duplicate
-    new_item.setCount count
+    new_item = @objects.last.send :duplicate
+    new_item.send :setCount, count
     add new_item, count
     return new_item
   end
 
-  def insertItemAtBegining count
-    new_item = @objects.first.duplicate
-    @objects.insert(1, new_item)
-    @objects.first.setCount(count)
-
-    @bounds.insert(0, 0)
-    moveBounds(0, count)
-    return @objects.first
-  end
-
   def splitObject index, num
-    start = startOfAt(index)
+    start = @bounds[index-1]
     len = countOfAt(index)
     split = num-start
 
     raise ArgumentError if start==num
 
-    new_item = @objects[index].duplicate
+    new_item = @objects[index].send :duplicate
     @objects.insert(index+1, new_item)
 
-    @objects[index].setCount(split)
-    @objects[index+1].setCount(len-split)
+    @objects[index].send :setCount, split
+    @objects[index+1].send :setCount, len-split
 
     @bounds.insert index, num
   end  
@@ -120,19 +115,14 @@ class ManagedIntervalArray
 #############
 
   def countOfAt index
-    return @bounds[0] if index==0
     @bounds[index] - @bounds[index-1]
-  end
-
-  def startOfAt index
-    index > 0 ? @bounds[index-1] : 0
   end
 
   # Ruby v < 2.0 didn't have bsearch. so we do it in pure ruby
   def find_index num
     return if num > size
 
-    low = 0
+    low = 1
     high = @bounds.count
 
     while low!=high do
@@ -147,7 +137,7 @@ class ManagedIntervalArray
     low
   end
 
-  private :countOfAt, :moveBounds, :appendItemAtEnd, :insertItemAtBegining, :find_index, :splitObject
+  private :countOfAt, :moveBounds, :appendItemAtEnd, :find_index, :splitObject
 
 end
 
