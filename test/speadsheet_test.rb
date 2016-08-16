@@ -19,7 +19,7 @@ describe "Spreadsheet" do
 
 
   it "should save file" do
-    tmp_file = 'test/fixtures/delme.ods'
+    tmp_file = 'tmp/delme.ods'
     begin File.delete(tmp_file) rescue nil end
 
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
@@ -90,29 +90,32 @@ describe "Spreadsheet" do
 
 
   it "generate bunch of test docs" do
-    tmp_dir = 'test/fixtures/'
+    tmp_dir = 'tmp/'
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
 
     spread.save(tmp_dir+"file_01.ods")
 
     tab = spread[1]
 
-    tab[1,0] = "First_Insert"
+    tab[0,0] = "First cell write"
     spread.save(tmp_dir+"file_02_cell_write.ods")
 
+    tab[0,0] = "written text to repeated row 4"
     tab[4,0] = "Insert_in repeated"
     spread.save(tmp_dir+"file_03_row_split.ods")
 
+    tab[0,0] = "deleted row 3"
     tab.delete 3
     spread.save(tmp_dir+"file_04_row_delete.ods")
 
+    tab[0,0] = "insert 5 rows at 2"
     tab.insert 2,5
     spread.save(tmp_dir+"file_05_row_insert.ods")
 
+    tab[0,0] = "write text to 4 and removed row 3"
     tab[4,0] = "new_rows_splitted"
     tab.delete 3
     spread.save(tmp_dir+"file_06_split_and_delete.ods")
-
    end
 
 end
