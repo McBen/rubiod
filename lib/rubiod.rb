@@ -31,6 +31,9 @@ require 'fileutils'
 
 module Rubiod
   require 'rubiod/version'
+
+  require 'rubiod/managed_interval_array'
+
   require 'rubiod/document'
   require 'rubiod/spreadsheet'
   require 'rubiod/worksheet'
