@@ -67,6 +67,17 @@ describe "Worksheet" do
 
     assert_kind_of(Rubiod::Row, newrow)
     assert_equal(@row_count+1 , @table.get_row_count)
+
+    @table.insert 5,5
+    assert_equal(@row_count+1+5 , @table.get_row_count)
+   end
+
+  it "should insert multiple rows" do
+    newrow = @table.insert 2,5
+
+    assert_kind_of(Rubiod::Row, newrow)
+    assert(newrow.repeated?)
+    assert_equal(@row_count+5 , @table.get_row_count)
    end
 
 

@@ -88,5 +88,32 @@ describe "Spreadsheet" do
     assert_equal( "test", spread[SHEET_NAME, 15, 1] )
   end
 
+
+  it "generate bunch of test docs" do
+    tmp_dir = 'test/fixtures/'
+    spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
+
+    spread.save(tmp_dir+"file_01.ods")
+
+    tab = spread[1]
+
+    tab[1,0] = "First_Insert"
+    spread.save(tmp_dir+"file_02_cell_write.ods")
+
+    tab[4,0] = "Insert_in repeated"
+    spread.save(tmp_dir+"file_03_row_split.ods")
+
+    tab.delete 3
+    spread.save(tmp_dir+"file_04_row_delete.ods")
+
+    tab.insert 2,5
+    spread.save(tmp_dir+"file_05_row_insert.ods")
+
+    tab[4,0] = "new_rows_splitted"
+    tab.delete 3
+    spread.save(tmp_dir+"file_06_split_and_delete.ods")
+
+   end
+
 end
 

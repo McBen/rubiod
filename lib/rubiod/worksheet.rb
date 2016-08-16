@@ -28,8 +28,8 @@ module Rubiod
 
     # inserts a row after specified, copying last's formatting
     # return new row or nil
-    def insert row_ind
-      @row_refs.insert(row_ind)
+    def insert row_ind, count=1
+      @row_refs.insert(row_ind,count)
     end
 
     # deletes specified row
