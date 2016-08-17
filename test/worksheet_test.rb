@@ -44,7 +44,6 @@ describe "Worksheet" do
    end
 
   it "should read&write new cell by adding cell" do
-    skip
     @table[1,5] = TEXT
     assert_equal(TEXT, @table[1,5])
    end

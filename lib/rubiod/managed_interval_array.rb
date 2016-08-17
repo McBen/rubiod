@@ -30,6 +30,10 @@ class ManagedIntervalArray
     countOfAt(idx)
   end
 
+  def each 
+    (1...@bounds.size).each { |i| yield(@bounds[i-1],@objects[i])}
+  end
+
   def delete num
     index = find_index num
     raise ArgumentError unless index

@@ -21,7 +21,6 @@
 #++
 
 require 'ruby_extensions'
-require 'range_hash'
 
 require 'libxml'
 require 'libxml_extensions'

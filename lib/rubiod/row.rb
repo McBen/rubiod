@@ -6,13 +6,12 @@ module Rubiod
       @worksheet = worksheet
       @x_row = x_row
 
-      @cell_refs = RangeHash.new
-      cur_index = 0
+      @cell_refs = ManagedIntervalArray.new
+
       @x_row.each_element do |x_cell|
         cell = Cell.new(self, x_cell)
-        rep = cell.repeated? || 1
-        @cell_refs.insert cur_index..cur_index+rep-1, cell
-        cur_index += rep
+        count = cell.repeated? || 1
+        @cell_refs.add cell, count
       end
     end
 
@@ -29,19 +28,12 @@ module Rubiod
     end
 
     def []= ind, val
-      key, cell = @cell_refs.at ind
-      return unless key # TODO: not to leave
-      if key.atom?
-        cell.set_data val
-      else
-        cells = cell.send :insert_split, ind-key.first, val
-        @cell_refs.split ind, cells
-        val
-      end
+      cell = @cell_refs.prepareForChange(ind)
+      cell.set_data val
     end
 
     def cellnum
-      if ind = @cell_refs.last_index then ind+1 else 0 end
+      @cell_refs.size
     end
 
 
@@ -59,28 +51,26 @@ module Rubiod
 
         start_cur_index = 0 # index of first cell with current style
         cur_style = @cell_refs[0].style_name
-        refs = @cell_refs.each do |key, cell|
+        @cell_refs.each do |index, cell|
           new_style = cell.style_name
-          if cur_style != new_style
-            insert_add_cell cur_style, key.first - start_cur_index
 
-            start_cur_index = key.first
+          if cur_style != new_style
+            add_cell(@x_row.next, cur_style, index-start_cur_index)
+            start_cur_index = index
             cur_style = new_style
           end
         end
-        insert_add_cell cur_style, refs.last[0].last - start_cur_index + 1
+        add_cell(@x_row.next, cur_style, @cell_refs.size - start_cur_index )
 
         Row.new(@worksheet, @x_row.next)
       end
 
-      def insert_add_cell style, repeated
+      def add_cell row, style, count
         opts = {}
         opts[:style_name] = style if style
-        opts[:repeated] = repeated if repeated > 1
+        opts[:repeated] = count if count > 1
 
-        @x_row.next << Cell.send(:new_empty_x, @x_row.doc, opts)
-
-        self
+        @x_row.next << Cell.new_empty_x(@x_row.doc, opts)
       end
 
 
@@ -96,5 +86,4 @@ module Rubiod
       end
 
   end
-
 end

@@ -2,29 +2,17 @@ module Rubiod
 
   class Cell
 
-    class << self
+    # options [Hash] -
+    #   :repeated => [Integer] # specify to create repeated cell
+    #   :style_name => [String] # specify to set style
+    def self.new_empty_x doc, options={}
+        attr_hash = {}
+        attr_hash['table:style-name'] = options[:style_name]            unless options[:style_name].nil? || options[:style_name].empty?
+        attr_hash['table:number-columns-repeated'] = options[:repeated] if options[:repeated] && options[:repeated]>1
 
-      private
-
-      # options [Hash] -
-      #   :repeated => [Integer] # specify to create repeated cell
-      #   :style_name => [String] # specify to set style
-      def new_empty_x doc, options={}
-        if options.empty?
-          doc.ns_create_node 'table:table-cell'
-        else
-          attr_hash = {}
-          if style = options[:style_name]
-            attr_hash['table:style-name'] = style
-          end
-          if num = options[:repeated]
-            attr_hash['table:number-columns-repeated'] = num
-          end
-          doc.ns_create_node 'table:table-cell', nil, attr_hash
-        end
-      end
-
+        doc.ns_create_node 'table:table-cell', nil, attr_hash
     end
+
 
     def initialize row, x_cell
       @row = row
@@ -62,35 +50,26 @@ module Rubiod
       data
     end
 
+
+    #############################
+    # Managed Object
     private
 
-    # cell must be 'repeated?'
-    def insert_split left_repeated, data
-      if left = try_create_empty_x(left_repeated)
-        @x_cell.prev = left
+      def duplicate
+        @x_cell.next = Cell.new_empty_x @x_cell.doc, {style_name: style_name}
+        Cell.new(@row, @x_cell.next)
       end
 
-      if right = try_create_empty_x(repeated? - left_repeated - 1)
-        @x_cell.next = right
+      def delete!
+        @x_cell.remove!
       end
 
-      set_data data # mutator
-
-      {
-        :left => self.class.new(@row, left),
-        :mid => self,
-        :right => self.class.new(@row, right)
-      }
-    end
-
-    def try_create_empty_x count
-      if count > 0
-        opts = {}
-        opts[:style_name] = style_name if style_name
-        opts[:repeated] = count if count > 1
-        self.class.send :new_empty_x, @x_cell.doc, opts
+      def setCount rep
+        @x_cell.ns_remove_attr 'table:number-columns-repeated'
+        if rep > 1 then
+          @x_cell.ns_set_attr 'table:number-columns-repeated', rep
+        end
       end
-    end
 
   end
 

@@ -81,7 +81,6 @@ describe "Spreadsheet" do
 
 
   it "should write cell or give error" do
-    skip("failing test") # FIXME
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
 
     spread[SHEET_NAME, 15, 1] = "test"
