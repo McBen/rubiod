@@ -115,6 +115,15 @@ describe "Spreadsheet" do
     tab[4,0] = "new_rows_splitted"
     tab.delete 3
     spread.save(tmp_dir+"file_06_split_and_delete.ods")
+
+    tab[0,0] = "hide lines"
+    tab.modifiyRange(1..12) {|x| x.hide }
+    spread.save(tmp_dir+"file_07_hide.ods")
+
+    tab[0,0] = "optimize"
+    tab.modifiyRange(0..20) {|x| x.show }
+    tab.optimize
+    spread.save(tmp_dir+"file_08_compress.ods")
    end
 
 end

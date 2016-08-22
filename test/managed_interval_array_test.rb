@@ -10,6 +10,10 @@ class TestManagedObject
     @status = ''
   end
 
+  def ==(other)
+    @value==other.value
+  end
+
   private
 
   def duplicate
@@ -26,7 +30,6 @@ class TestManagedObject
   def setCount num
     @status += "C#{num}"
   end
-
 end
 
 
@@ -217,7 +220,7 @@ describe "ManagedIntervalArray" do
   it "should give the current object if it is already a single object" do
     old_value = @marray[6]
     value = @marray.prepareForChange(6)
-    assert_equal( old_value, value )
+    assert( old_value.equal? value )
   end
 
   it "should isolate one item of a repeated object" do
@@ -228,5 +231,11 @@ describe "ManagedIntervalArray" do
     assert_equal( 1, @marray[1].value )
     assert_equal( 1, @marray[4].value )
   end
+
+  it "should find and compress equal objects" do
+    @marray[1].value = 0
+    @marray.optimize
+    assert_equal( 6, @marray.countOf(0) )
+   end
 
 end

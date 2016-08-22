@@ -4,13 +4,15 @@ The +rubiod+ gem is intended to provide cute ruby-style interface to work
 with OASIS Open Document Format files.
 For now it supports some functionality to read/modify OD spreadsheets (.ods).
 
-= This fork
+== This fork
 is based on netoctone ->  github.com/netoctone/rubiod.git
 
 Changes:
 * including unit-tests
 * file can be build in-memory (see 'Rails example')
-* improved handling
+* improved handling:
+  * new row/cell managment allows to read/write any cell
+  * hide/show rows
 
 = Requirements
 
@@ -88,6 +90,8 @@ Deleting an entire row (with shifting lower ones up):
   spread.save
 
 == Rails example
+
+Loading a template, render some text into it and send the file to the client:
 
   class myController
     def downloadSpreadsheet

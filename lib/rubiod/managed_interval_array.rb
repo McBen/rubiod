@@ -1,5 +1,6 @@
 class ManagedIntervalArray
 
+  attr_reader :objects, :bounds
 
   def initialize
     @objects = [nil]
@@ -142,9 +143,10 @@ class ManagedIntervalArray
       index+=1
     end    
     
-    while (@bounds[index]<=range.last && index<@bounds.size) do 
+    while (@bounds[index]<=range.last) do 
       yield @objects[index]
       index+=1
+      return if index>=@bounds.size
     end
 
     if (@bounds[index]>range.last+1) then
@@ -153,6 +155,29 @@ class ManagedIntervalArray
     yield @objects[index]
   end
 
+
+  def optimize
+    index =1
+    while (index < @bounds.size-1) do
+      if (@objects[index]==@objects[index+1]) then
+        @bounds.delete_at index
+        @objects.delete_at index+1
+
+        new_count = countOfAt(index)
+        @objects[index].send :setCount, new_count
+      end
+      index+=1
+    end
+  end
+
+  def ==(otherObj)
+    @objects.each_with_index { |obj, index|
+      return false if not obj==otherObj.objects[index]
+      return false if not @bounds[index]==otherObj.bounds[index]
+    }
+    
+    return true
+  end
 
 #############
 

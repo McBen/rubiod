@@ -113,4 +113,20 @@ describe "Worksheet" do
     }
    end
 
+  it "should hide a range of rows even when out-of-bounds" do
+    @table.modifiyRange(5..99) {|x| x.hide }
+   end
+
+  it "should re-collapse rows" do
+    # force split
+    (0...@table.get_row_count).each {|r| @table[r,0]=@table[r,0] }
+    (0...@table.get_row_count).each {|r| refute(@table[r].repeated?, "force split not working?") }
+
+    @table.optimize
+
+    count_rep = 0
+    (0...@table.get_row_count).each {|r| count_rep+=1 if @table[r].repeated? }
+    assert(count_rep>0, "atleast 1 row should be collapsed")
+   end
+
 end

@@ -55,4 +55,11 @@ describe "Row" do
     refute @table[3].repeated?
    end
 
+  it "should compare rows" do
+    # force split
+    @table[3,0]=NEW_TEXT
+    @table[4,0]=NEW_TEXT
+    assert( @table[3] == @table[4] )
+   end
+
 end

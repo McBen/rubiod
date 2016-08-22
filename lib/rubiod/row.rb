@@ -15,7 +15,7 @@ module Rubiod
       end
     end
 
-    attr_reader :worksheet
+    attr_reader :worksheet, :cell_refs
 
     def repeated?
       rep = @x_row['number-rows-repeated']
@@ -47,10 +47,19 @@ module Rubiod
     def cellnum
       @cell_refs.size
     end
+    
+    def optimize
+      @cell_refs.optimize
+    end
+
 
 
     #############################
     # Managed Object
+    def ==(otherRow)
+      return @cell_refs==otherRow.cell_refs
+    end
+
     private
 
       def duplicate

@@ -50,6 +50,9 @@ module Rubiod
       data
     end
 
+    def ==(otherCell)
+      return (data==otherCell.data && style_name==otherCell.style_name)
+    end
 
     #############################
     # Managed Object

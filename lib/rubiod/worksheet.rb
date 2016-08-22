@@ -44,6 +44,11 @@ module Rubiod
     def modifiyRange range
       @row_refs.modifiyRange(range, &Proc.new)
     end
-  end
 
+    def optimize
+      @row_refs.each {|_,r| r.optimize }
+      @row_refs.optimize
+    end
+
+  end
 end
