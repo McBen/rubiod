@@ -4,6 +4,14 @@ The +rubiod+ gem is intended to provide cute ruby-style interface to work
 with OASIS Open Document Format files.
 For now it supports some functionality to read/modify OD spreadsheets (.ods).
 
+= This fork
+is based on netoctone ->  github.com/netoctone/rubiod.git
+
+Changes:
+* including unit-tests
+* file can be build in-memory (see 'Rails example')
+* improved handling
+
 = Requirements
 
 +rubiod+ works with ruby 1.8.7 or higher.
@@ -15,13 +23,13 @@ At least two ways available:
 
 1. Build gem from source:
 
-    git clone git://github.com/netoctone/rubiod.git; cd rubiod
+    git clone git://github.com/mcben/rubiod.git; cd rubiod
     gem build rubiod.gemspec
     gem install rubiod-version.gem
 
 2. Or add following line to Gemfile (if it's in use):
 
-    gem 'rubiod', :git => 'git://github.com/netoctone/rubiod.git'
+    gem 'rubiod', :git => 'git://github.com/mcben/rubiod.git'
 
 = ODS Showcase
 
@@ -78,6 +86,22 @@ Deleting an entire row (with shifting lower ones up):
 == Apply modifications
 
   spread.save
+
+== Rails example
+
+  class myController
+    def downloadSpreadsheet
+      report = Rubiod::Spreadsheet.new("app/templates/spread.ots")
+
+      table = report["Table1"]
+      table[1,1] = @order.customer.name
+      table[1,3] = @order.customer_reference
+
+      send_data report.generate, type: 'application/vnd.oasis.opendocument.spreadsheet',
+                                disposition: 'attachment',
+                                filename: 'your_file.ods'    
+    end
+  end
 
 = License
 
