@@ -10,6 +10,7 @@ describe "Row" do
     @table = @spread["Tabelle1"]
     @row = @table[2]
     @row_repeated = @table[3]
+    @row_hidden = @table[11]
   end
 
   it "should be loaded" do
@@ -20,6 +21,20 @@ describe "Row" do
     assert (@row_repeated.repeated?)
     assert_equal(3, @row_repeated.repeated?)
    end
+
+  it "should recognize hidden rows" do
+    assert (@row_hidden.hidden?)
+    refute (@row_repeated.hidden?)
+  end
+
+  it "should show & hide lines" do
+    assert (@row_hidden.hidden?)
+    @row_hidden.show
+    refute (@row_hidden.hidden?)
+    @row_hidden.hide
+    assert (@row_hidden.hidden?)
+  end
+
 
   it "should read&write cell" do
     assert_equal("Text", @row[0])

@@ -57,7 +57,7 @@ describe "Worksheet" do
 
   it "should get count of rows" do
     count = @table.get_row_count
-    assert_equal(9, count)
+    assert_equal(15, count)
    end
 
 
@@ -90,9 +90,27 @@ describe "Worksheet" do
    end
 
 
-  it "should delete a repeated row " do
+  it "should delete a repeated row" do
     @table.delete 4
     assert_equal(@row_count-1, @table.get_row_count)
+   end
+
+  it "should hide a range of rows" do
+    @table.modifiyRange(1..7) {|x| x.hide }
+
+    refute(@table[0].hidden?)
+    (1..7).each { |x| 
+        assert(@table[x].hidden?, "line #{x} should be hidden")
+    }
+    refute(@table[8].hidden?)
+   end
+
+  it "should hide a range of rows incl. splitting" do
+    @table.modifiyRange(5..12) {|x| x.hide }
+
+    (5..12).each { |x| 
+        assert(@table[x].hidden?, "line #{x} should be hidden")
+    }
    end
 
 end

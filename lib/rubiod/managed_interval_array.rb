@@ -133,6 +133,27 @@ class ManagedIntervalArray
     return new_item
   end
 
+  def modifiyRange range
+    index = find_index range.first
+
+    start = @bounds[index-1]
+    if start < range.first then
+      splitObject(index,range.first)
+      index+=1
+    end    
+    
+    while (@bounds[index]<=range.last && index<@bounds.size) do 
+      yield @objects[index]
+      index+=1
+    end
+
+    if (@bounds[index]>range.last+1) then
+      splitObject(index,range.last)
+    end
+    yield @objects[index]
+  end
+
+
 #############
 
   def countOfAt index

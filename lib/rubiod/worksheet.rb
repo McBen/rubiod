@@ -40,6 +40,10 @@ module Rubiod
     def get_row_count
       @row_refs.size
     end
+
+    def modifiyRange range
+      @row_refs.modifiyRange(range, &Proc.new)
+    end
   end
 
 end

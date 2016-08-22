@@ -22,6 +22,18 @@ module Rubiod
       rep && rep.to_i
     end
 
+    def hidden?
+      @x_row['visibility'] == 'collapse'
+    end
+
+    def hide
+      @x_row.ns_set_attr 'table:visibility', 'collapse'
+    end
+
+    def show
+      @x_row.ns_remove_attr 'table:visibility'
+    end
+
     def [] ind
       cell = @cell_refs[ind]
       cell && cell.data

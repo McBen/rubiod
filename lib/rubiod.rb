@@ -20,8 +20,6 @@
 # THE SOFTWARE.
 #++
 
-require 'ruby_extensions'
-
 require 'libxml'
 require 'libxml_extensions'
 
