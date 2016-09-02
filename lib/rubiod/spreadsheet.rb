@@ -10,13 +10,16 @@ module Rubiod
       end
 
       x_spread = @x_content.find_first '//office:spreadsheet'
-      x_tabs_with_index = x_spread.ns_elements.each_with_index
-      @worksheets = x_tabs_with_index.inject({}) do |wss, (x_tab, i)|
-        ws = Worksheet.new(self, x_tab)
-        wss[x_tab['name']] = ws
-        wss[i] = ws
-        wss
+      x_tabs = x_spread.children.select { |node| node.name=='table' }
+
+      @worksheets = {}
+      x_tabs.each_with_index do |node,i|
+        ws = Worksheet.new(self, node)
+        @worksheets[node['name']] = ws
+        @worksheets[i] = ws
       end
+
+      @labels = NamedExpressions.new(x_spread)
     end
 
     def save path=nil

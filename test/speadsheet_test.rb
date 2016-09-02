@@ -39,9 +39,7 @@ describe "Spreadsheet" do
 
   it "should give worksheet names" do
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
-    # TODO: remove 'nil' 
-    assert_equal( [nil,SHEET_NAME, SHEET2_NAME], spread.worksheet_names ) 
-    assert_equal( 3, spread.worksheet_names.count ) 
+    assert_equal( [SHEET_NAME, SHEET2_NAME], spread.worksheet_names ) 
    end
 
 
@@ -67,7 +65,7 @@ describe "Spreadsheet" do
     cell = spread[SHEET_NAME, 1, 0]
     assert_equal( "Some", cell )
 
-    cell = spread[2, 0, 0]
+    cell = spread[1, 0, 0]
     assert_equal( "OnPage2", cell )
    end
 
