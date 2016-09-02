@@ -34,6 +34,8 @@ module Rubiod
   require 'rubiod/document'
   require 'rubiod/spreadsheet'
   require 'rubiod/worksheet'
+  require 'rubiod/named_range'
+  require 'rubiod/named_expressions'
   require 'rubiod/row'
   require 'rubiod/cell'
 

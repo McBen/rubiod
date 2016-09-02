@@ -43,6 +43,11 @@ class LibXML::XML::Node
     each_element { |e| elems << e }
     elems
   end
+
+  def ns_elements_by_name(name)
+    children.select { |node| node.name==name }
+  end
+
 end
 
 class LibXML::XML::Attr

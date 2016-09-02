@@ -2,6 +2,9 @@ module Rubiod
 
   class Spreadsheet < Document
 
+    attr_reader :labels
+    attr_reader :worksheets
+
     def initialize string_or_io
       super
 
@@ -10,16 +13,15 @@ module Rubiod
       end
 
       x_spread = @x_content.find_first '//office:spreadsheet'
-      x_tabs = x_spread.children.select { |node| node.name=='table' }
 
       @worksheets = {}
-      x_tabs.each_with_index do |node,i|
+      x_spread.ns_elements_by_name('table').each_with_index do |node,i|
         ws = Worksheet.new(self, node)
         @worksheets[node['name']] = ws
         @worksheets[i] = ws
       end
 
-      @labels = NamedExpressions.new(x_spread)
+      @labels = NamedExpressions.new(self, x_spread)
     end
 
     def save path=nil
@@ -48,8 +50,6 @@ module Rubiod
       buffer.string
     end
 
-
-    attr_reader :worksheets
 
     def worksheet_names
       @worksheets.keys.reject { |k| k.kind_of? Numeric }
