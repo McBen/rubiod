@@ -92,7 +92,7 @@ describe "Spreadsheet" do
 
     spread.save(tmp_dir+"file_01.ods")
 
-    tab = spread[1]
+    tab = spread[0]
 
     tab[0,0] = "First cell write"
     spread.save(tmp_dir+"file_02_cell_write.ods")
@@ -122,6 +122,10 @@ describe "Spreadsheet" do
     tab.modifiyRange(0..20) {|x| x.show }
     tab.optimize
     spread.save(tmp_dir+"file_08_compress.ods")
+
+    tab[0,0] = "number"
+    tab[1,0] = 256.123
+    spread.save(tmp_dir+"file_09_value.ods")
    end
 
 end

@@ -38,21 +38,36 @@ module Rubiod
       no_data? ? nil : @x_cell.ns_elements.first.content # TODO: improve
     end
 
-    # TODO: maybe, remove only value-type and value
-    # removes all current attributes (except style-name) and content
     def set_data data
-      @x_cell.each_attr do |a|
-        a.remove! unless a.name == 'style-name' # TODO: ns equality check
+      removeXCellData 
+
+      if data.is_a? Numeric then
+        @x_cell.ns_set_attr 'office:value-type', 'float'
+        @x_cell.ns_set_attr 'calcext:value-type', 'float'
+        @x_cell.ns_set_attr 'office:value', data
+        @x_cell << @x_cell.doc.ns_create_node('text:p', data.to_s)
+      else        
+        @x_cell.ns_set_attr 'office:value-type', 'string'
+        @x_cell << @x_cell.doc.ns_create_node('text:p', data)
       end
-      @x_cell.each(&:remove!)
-      @x_cell.ns_set_attr 'office:value-type', 'string'
-      @x_cell << @x_cell.doc.ns_create_node('text:p', data)
+
       data
     end
 
     def ==(otherCell)
       return (data==otherCell.data && style_name==otherCell.style_name)
     end
+
+
+    private
+      # TODO: maybe, remove only value-type and value
+      # removes all current attributes (except style-name) and content
+      def removeXCellData 
+        @x_cell.each_attr do |a|
+          a.remove! unless a.name == 'style-name' # TODO: ns equality check
+        end
+        @x_cell.each(&:remove!)
+      end
 
     #############################
     # Managed Object

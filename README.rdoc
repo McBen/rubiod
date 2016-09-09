@@ -4,8 +4,8 @@ The +rubiod+ gem is intended to provide cute ruby-style interface to work
 with OASIS Open Document Format files.
 For now it supports some functionality to read/modify OD spreadsheets (.ods).
 
-== This fork
-is based on netoctone ->  github.com/netoctone/rubiod.git
+== About this fork
+based on netoctone ->  github.com/netoctone/rubiod.git
 
 Changes:
 * including unit-tests
@@ -13,6 +13,7 @@ Changes:
 * improved handling:
   * new row/cell managment allows to read/write any cell
   * hide/show rows
+* named cells
 
 = Requirements
 
@@ -84,6 +85,11 @@ Inserting new row after specified one, applying the same formatting:
 Deleting an entire row (with shifting lower ones up):
 
   worksheet.delete 11
+
+Using names cells
+  
+  oldvalue = spread.labels["myCell"].value
+  spread.labels["myCell"] = "new value"
 
 == Apply modifications
 
