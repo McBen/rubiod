@@ -46,6 +46,8 @@ module Rubiod
         @x_cell.ns_set_attr 'calcext:value-type', 'float'
         @x_cell.ns_set_attr 'office:value', data
         @x_cell << @x_cell.doc.ns_create_node('text:p', data.to_s)
+
+        @row.worksheet.needRecalculation
       else        
         @x_cell.ns_set_attr 'office:value-type', 'string'
         @x_cell << @x_cell.doc.ns_create_node('text:p', data)

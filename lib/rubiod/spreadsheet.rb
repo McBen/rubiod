@@ -22,6 +22,7 @@ module Rubiod
       end
 
       @labels = NamedExpressions.new(self, x_spread)
+      @formulasAreError = false
     end
 
     def save path=nil
@@ -50,7 +51,6 @@ module Rubiod
       buffer.string
     end
 
-
     def worksheet_names
       @worksheets.keys.reject { |k| k.kind_of? Numeric }
     end
@@ -66,6 +66,23 @@ module Rubiod
     def []= ws_index_or_name, row, col, val
       @worksheets[ws_index_or_name][row, col] = val
     end
+
+    def needRecalculation
+      setAllFormulasToError
+    end
+
+    private
+      def setAllFormulasToError
+        return if @formulasAreError
+
+        path = '//office:document-content/office:body/office:spreadsheet/table:table/table:table-row/table:table-cell[@table:formula]'
+        @x_content.find(path).each() { | item |  
+          item.ns_remove_attr 'calcext:value-type'
+          item.ns_set_attr 'calcext:value-type', "error"
+        }
+
+        @formulasAreError = true
+      end
 
   end
 

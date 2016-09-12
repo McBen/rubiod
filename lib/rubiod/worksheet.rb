@@ -50,5 +50,9 @@ module Rubiod
       @row_refs.optimize
     end
 
+    def needRecalculation
+      @spreadsheet.needRecalculation
+    end
+
   end
 end

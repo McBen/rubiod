@@ -63,7 +63,7 @@ describe "Spreadsheet" do
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
 
     cell = spread[SHEET_NAME, 1, 0]
-    assert_equal( "Some", cell )
+    assert_equal( '1', cell )
 
     cell = spread[1, 0, 0]
     assert_equal( "OnPage2", cell )
