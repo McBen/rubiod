@@ -3,11 +3,12 @@ class NamedExpressions
 
   def initialize(spread, x_spread)
 
-    x_exp = x_spread.ns_elements_by_name('named-expressions')
+    x_exp = x_spread.xpath('table:named-expressions')
 
     @namedRange = {}
-    x_exp.first.ns_elements_by_name('named-range').each { |node|
-      @namedRange[node['name']] = NamedRange.new(spread, node)
+    return if x_exp.nil?
+    x_exp[0].xpath('table:named-range').each { |node|
+      @namedRange[node['table:name']] = NamedRange.new(spread, node)
     }
   end
 

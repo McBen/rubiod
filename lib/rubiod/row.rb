@@ -8,7 +8,7 @@ module Rubiod
 
       @cell_refs = ManagedIntervalArray.new
 
-      @x_row.each_element do |x_cell|
+      @x_row.children.each do |x_cell|
         cell = Cell.new(self, x_cell)
         count = cell.repeated? || 1
         @cell_refs.add cell, count
@@ -18,20 +18,20 @@ module Rubiod
     attr_reader :worksheet, :cell_refs
 
     def repeated?
-      rep = @x_row['number-rows-repeated']
+      rep = @x_row['table:number-rows-repeated']
       rep && rep.to_i
     end
 
     def hidden?
-      @x_row['visibility'] == 'collapse'
+      @x_row['table:visibility'] == 'collapse'
     end
 
     def hide
-      @x_row.ns_set_attr 'table:visibility', 'collapse'
+      @x_row['table:visibility'] = 'collapse'
     end
 
     def show
-      @x_row.ns_remove_attr 'table:visibility'
+      @x_row.remove_attribute('visibility')
     end
 
     def [] ind
@@ -68,22 +68,23 @@ module Rubiod
 
 
       def insert_after
-        @x_row.next = @x_row.ns_copy_with_attrs
+        new_row = @x_row.dup
+        @x_row.add_next_sibling(new_row)
+        
+        # start_cur_index = 0 # index of first cell with current style
+        # cur_style = @cell_refs[0].style_name
+        # @cell_refs.each do |index, cell|
+        #   new_style = cell.style_name
 
-        start_cur_index = 0 # index of first cell with current style
-        cur_style = @cell_refs[0].style_name
-        @cell_refs.each do |index, cell|
-          new_style = cell.style_name
+        #   if cur_style != new_style
+        #     add_cell(@x_row.next, cur_style, index-start_cur_index)
+        #     start_cur_index = index
+        #     cur_style = new_style
+        #   end
+        # end
+        # add_cell(new_row, cur_style, @cell_refs.size - start_cur_index )
 
-          if cur_style != new_style
-            add_cell(@x_row.next, cur_style, index-start_cur_index)
-            start_cur_index = index
-            cur_style = new_style
-          end
-        end
-        add_cell(@x_row.next, cur_style, @cell_refs.size - start_cur_index )
-
-        Row.new(@worksheet, @x_row.next)
+        Row.new(@worksheet, new_row)
       end
 
       def add_cell row, style, count
@@ -96,13 +97,14 @@ module Rubiod
 
 
       def delete!
-        @x_row.remove!
+        @x_row.remove
       end
 
       def setCount rep
-        @x_row.ns_remove_attr 'table:number-rows-repeated'
         if rep > 1 then
-          @x_row.ns_set_attr 'table:number-rows-repeated', rep
+          @x_row['number-rows-repeated']=rep
+        else
+          @x_row.remove_attribute 'number-rows-repeated'
         end
       end
 

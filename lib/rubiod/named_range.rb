@@ -6,7 +6,7 @@ class NamedRange
   def initialize(spread, node)
     @spreadsheet = spread
     @x_node = node
-    @ref = parseCellReferenz(@x_node['base-cell-address']) 
+    @ref = parseCellReferenz(@x_node['table:base-cell-address']) 
   end
 
   def value

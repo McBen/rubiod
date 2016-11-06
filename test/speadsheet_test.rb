@@ -21,6 +21,7 @@ describe "Spreadsheet" do
   it "should save file" do
     tmp_file = 'tmp/delme.ods'
     begin File.delete(tmp_file) rescue nil end
+    begin Dir.mkdir 'tmp'  rescue nil end
 
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
     spread.save(tmp_file)

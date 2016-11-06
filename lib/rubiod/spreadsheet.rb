@@ -9,15 +9,15 @@ module Rubiod
       super
 
       @x_content = Zip::File.open(@filename) do |zip|
-        LibXML::XML::Document.io zip.get_input_stream('content.xml')
+        Nokogiri::XML( zip.get_input_stream('content.xml') )
       end
 
-      x_spread = @x_content.find_first '//office:spreadsheet'
+      x_spread = @x_content.xpath '//office:spreadsheet'
 
       @worksheets = {}
-      x_spread.ns_elements_by_name('table').each_with_index do |node,i|
+      x_spread.xpath('table:table').each_with_index do |node,i|
         ws = Worksheet.new(self, node)
-        @worksheets[node['name']] = ws
+        @worksheets[node['table:name']] = ws
         @worksheets[i] = ws
       end
 
@@ -38,7 +38,7 @@ module Rubiod
             entry.get_input_stream do |is|
 
               data = is.sysread
-              data = @x_content.to_s(indent: false) if entry.name=='content.xml'
+              data = @x_content.to_xml(indent: 0) if entry.name=='content.xml'
                 
               out.put_next_entry(entry.name)
               out.write data

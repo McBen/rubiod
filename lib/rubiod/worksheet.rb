@@ -8,7 +8,7 @@ module Rubiod
 
       @row_refs = ManagedIntervalArray.new
 
-      @x_table.ns_elements.select{ |n| n.name == 'table-row' }.each do |x_row|
+      @x_table.xpath('table:table-row').each do |x_row|
         row = Row.new(self, x_row)
         count = row.repeated? || 1
         @row_refs.add row,count

@@ -20,8 +20,7 @@
 # THE SOFTWARE.
 #++
 
-require 'libxml'
-require 'libxml_extensions'
+require 'nokogiri'
 
 require 'zip'
 require 'fileutils'
