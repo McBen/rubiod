@@ -22,7 +22,7 @@ module Rubiod
       end
 
       @labels = NamedExpressions.new(self, x_spread)
-      @formulasAreError = false
+      @recalculationsForced = false
     end
 
     def save path=nil
@@ -68,20 +68,29 @@ module Rubiod
     end
 
     def needRecalculation
-      setAllFormulasToError
+      clearFormulaResults
     end
 
     private
-      def setAllFormulasToError
-        return if @formulasAreError
+      def clearFormulaResults
+        return if @recalculationsForced
+
 
         path = '//office:document-content/office:body/office:spreadsheet/table:table/table:table-row/table:table-cell[@table:formula]'
         @x_content.find(path).each() { | item |  
+
+          # to force recalculation of formulas we 1) set all expressions to 'error'
           item.ns_remove_attr 'calcext:value-type'
           item.ns_set_attr 'calcext:value-type', "error"
+          #item.attributes.get_attribute_ns('value-type', 'calcext').value = "error"
+
+          # to force recalculation of formulas we 2) clear the text result
+          item.find('text:p').each() { |text|  
+            text.remove!
+          }
         }
 
-        @formulasAreError = true
+        @recalculationsForced = true
       end
 
   end
