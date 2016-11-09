@@ -93,7 +93,7 @@ describe "Spreadsheet" do
 
     spread.save(tmp_dir+"file_01.ods")
 
-    tab = spread[1]
+    tab = spread[0]
 
     tab[0,0] = "First cell write"
     spread.save(tmp_dir+"file_02_cell_write.ods")

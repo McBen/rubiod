@@ -64,7 +64,7 @@ module Rubiod
 
       def setCount rep
         if rep > 1 then
-          @x_cell['number-columns-repeated']=rep
+          @x_cell['table:number-columns-repeated']=rep
         else
           @x_cell.remove_attribute 'number-columns-repeated'
         end
