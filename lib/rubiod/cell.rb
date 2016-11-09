@@ -26,25 +26,42 @@ module Rubiod
       no_data? ? nil : @x_cell.child.content
     end
 
-    # TODO: maybe, remove only value-type and value
-    # removes all current attributes (except style-name) and content
     def set_data data
-      old_style = @x_cell['table:style-name']
+      removeXCellData 
 
-      @x_cell.attributes.clear
-      @x_cell.children.remove
+      if data.is_a? Numeric then
+        @x_cell['office:value-type']='float'
+        @x_cell['calcext:value-type']='float'
+        @x_cell['office:value']=data
 
-      @x_cell['table:style-name']=old_style unless old_style.nil?
-      @x_cell['office:value-type']='string'
+        value = Nokogiri::XML::Node.new('text:p',@x_cell)
+        value.content = data.to_s
+        @x_cell << value
+      
+        @row.worksheet.needRecalculation
+      else        
+        @x_cell['office:value-type']='string'
+        value = Nokogiri::XML::Node.new('text:p',@x_cell)
+        value.content = data
+        @x_cell << value
+      end
 
-      value = Nokogiri::XML::Node.new('text:p',@x_cell)
-      value.content = data
-      @x_cell << value
     end
 
     def ==(otherCell)
       return (data==otherCell.data && style_name==otherCell.style_name)
     end
+
+
+    private
+      # TODO: maybe, remove only value-type and value
+      # removes all current attributes (except style-name) and content
+      def removeXCellData 
+        old_style = @x_cell['table:style-name']
+        @x_cell.attributes.clear
+        @x_cell.children.remove
+        @x_cell['table:style-name']=old_style unless old_style.nil?
+      end
 
     #############################
     # Managed Object

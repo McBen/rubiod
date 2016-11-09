@@ -64,7 +64,7 @@ describe "Spreadsheet" do
     spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
 
     cell = spread[SHEET_NAME, 1, 0]
-    assert_equal( "Some", cell )
+    assert_equal( '1', cell )
 
     cell = spread[1, 0, 0]
     assert_equal( "OnPage2", cell )
@@ -123,6 +123,10 @@ describe "Spreadsheet" do
     tab.modifiyRange(0..20) {|x| x.show }
     tab.optimize
     spread.save(tmp_dir+"file_08_compress.ods")
+
+    tab[0,0] = "number"
+    tab[1,0] = 256.123
+    spread.save(tmp_dir+"file_09_value.ods")
    end
 
 end

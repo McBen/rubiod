@@ -18,8 +18,8 @@ describe "NamedRange" do
 
 
   it "should parse cell ref string" do
-    assert_equal(["Tabelle1",2,3], @firstCell.parseCellReferenz("$Tabelle1.$C$4"))
-    assert_equal(["Tabelle1",0,1,2,3], @firstCell.parseCellReferenz("$Tabelle1.$A$2:.$C$4"))
+    assert_equal(["Tabelle1",3,2], @firstCell.parseCellReferenz("$Tabelle1.$C$4"))
+    assert_equal(["Tabelle1",1,0,3,2], @firstCell.parseCellReferenz("$Tabelle1.$A$2:.$C$4"))
   end
 
   it "should convert alpha to number" do

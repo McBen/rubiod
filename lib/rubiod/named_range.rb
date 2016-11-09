@@ -26,8 +26,8 @@ class NamedRange
 
       return if @spreadsheet[match[1]].nil?
 
-      base = [ match[1],alphaToNumber(match[2])-1,match[3].to_i-1 ]
-      base += [ alphaToNumber(match[5])-1,match[6].to_i-1] unless match[4].nil?
+      base = [ match[1],match[3].to_i-1,alphaToNumber(match[2])-1 ]
+      base += [match[6].to_i-1,alphaToNumber(match[5])-1] unless match[4].nil?
       base
     end
 

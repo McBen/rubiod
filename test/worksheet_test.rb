@@ -81,7 +81,7 @@ describe "Worksheet" do
 
 
   it "should delete row" do
-    assert_equal("Some", @table[1,0])
+    assert_equal('1', @table[1,0])
 
     @table.delete 1
 

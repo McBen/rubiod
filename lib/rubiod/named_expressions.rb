@@ -29,5 +29,4 @@ class NamedExpressions
     @namedRange[key] && @namedRange[key].setValue(val)
   end
 
-
 end

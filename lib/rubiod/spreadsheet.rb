@@ -22,6 +22,7 @@ module Rubiod
       end
 
       @labels = NamedExpressions.new(self, x_spread)
+      @recalculationsForced = false
     end
 
     def save path=nil
@@ -50,7 +51,6 @@ module Rubiod
       buffer.string
     end
 
-
     def worksheet_names
       @worksheets.keys.reject { |k| k.kind_of? Numeric }
     end
@@ -66,6 +66,32 @@ module Rubiod
     def []= ws_index_or_name, row, col, val
       @worksheets[ws_index_or_name][row, col] = val
     end
+
+    def needRecalculation
+      clearFormulaResults
+    end
+
+    private
+      def clearFormulaResults
+        return if @recalculationsForced
+
+
+        path = '//office:document-content/office:body/office:spreadsheet/table:table/table:table-row/table:table-cell[@table:formula]'
+        @x_content.xpath(path).each() { | item |  
+
+          # to force recalculation of formulas we 1) set all expressions to 'error'
+          item.ns_remove_attr 'calcext:value-type'
+          item.ns_set_attr 'calcext:value-type', "error"
+          #item.attributes.get_attribute_ns('value-type', 'calcext').value = "error"
+
+          # to force recalculation of formulas we 2) clear the text result
+          item.find('text:p').each() { |text|  
+            text.remove!
+          }
+        }
+
+        @recalculationsForced = true
+      end
 
   end
 
