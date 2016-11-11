@@ -80,13 +80,12 @@ module Rubiod
         @x_content.xpath(path).each() { | item |  
 
           # to force recalculation of formulas we 1) set all expressions to 'error'
-          item.ns_remove_attr 'calcext:value-type'
-          item.ns_set_attr 'calcext:value-type', "error"
-          #item.attributes.get_attribute_ns('value-type', 'calcext').value = "error"
+          item['calcext:value-type']= "error"
 
           # to force recalculation of formulas we 2) clear the text result
-          item.find('text:p').each() { |text|  
-            text.remove!
+          item.xpath('text:p').each() { |text|  
+            p "removed"
+            text.remove
           }
         }
 
