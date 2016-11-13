@@ -84,7 +84,6 @@ module Rubiod
 
           # to force recalculation of formulas we 2) clear the text result
           item.xpath('text:p').each() { |text|  
-            p "removed"
             text.remove
           }
         }
