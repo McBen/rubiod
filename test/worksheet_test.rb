@@ -35,12 +35,12 @@ describe "Worksheet" do
    end
 
   it "should split a repeated row if a line is altered" do
-    assert @table[3].repeated?
+    assert @table.getRowConst(3).repeated?
 
     @table[3,1]=NEW_TEXT
     assert_equal(NEW_TEXT, @table[3,1])
 
-    refute @table[3].repeated?
+    refute @table.getRowConst(3).repeated?
    end
 
   it "should read&write new cell by adding cell" do
@@ -50,9 +50,15 @@ describe "Worksheet" do
 
 
   it "should read&write new cell by creating new row" do
-    assert(@table[4].repeated?)
+    assert(@table.getRowConst(4).repeated?)
     @table[4,0] = TEXT
     assert_equal(TEXT, @table[4,0])
+   end
+
+  it "should read&write new cell by creating new row through row" do
+    row = @table[16]
+    row[0] = TEXT
+    assert_equal(TEXT, @table[16,0])
    end
 
   it "should get count of rows" do
@@ -125,7 +131,7 @@ describe "Worksheet" do
     @table.optimize
 
     count_rep = 0
-    (0...@table.get_row_count).each {|r| count_rep+=1 if @table[r].repeated? }
+    (0...@table.get_row_count).each {|r| count_rep+=1 if @table.getRowConst(r).repeated? }
     assert(count_rep>0, "atleast 1 row should be collapsed")
    end
 

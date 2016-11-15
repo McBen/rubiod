@@ -8,9 +8,9 @@ describe "Row" do
   before do
     @spread = Rubiod::Spreadsheet.new('test/fixtures/doc1.ods')
     @table = @spread["Tabelle1"]
-    @row = @table[2]
-    @row_repeated = @table[3]
-    @row_hidden = @table[11]
+    @row = @table.getRowConst(2)
+    @row_repeated = @table.getRowConst(3)
+    @row_hidden = @table.getRowConst(11)
   end
 
   it "should be loaded" do
@@ -48,9 +48,9 @@ describe "Row" do
    end
 
   it "should reduce repeated row" do
-    assert_equal( 3, @table[3].repeated? )
+    assert_equal( 3, @table.getRowConst(3).repeated? )
     @table.delete 3
-    assert_equal( 2, @table[3].repeated? )
+    assert_equal( 2, @table.getRowConst(3).repeated? )
     @table.delete 3
     refute @table[3].repeated?
    end

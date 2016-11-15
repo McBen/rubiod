@@ -17,8 +17,13 @@ module Rubiod
 
     attr_reader :spreadsheet
 
+    # readonly access for Row
+    def getRowConst row
+      @row_refs[row]
+    end
+
     def [] row, col=nil
-      col.nil? ? @row_refs[row] : @row_refs[row][col]
+      col.nil? ? @row_refs.prepareForChange(row) : @row_refs[row][col]
     end
 
     def []= row, col, val

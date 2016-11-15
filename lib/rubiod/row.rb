@@ -71,19 +71,6 @@ module Rubiod
         new_row = @x_row.dup
         @x_row.add_next_sibling(new_row)
         
-        # start_cur_index = 0 # index of first cell with current style
-        # cur_style = @cell_refs[0].style_name
-        # @cell_refs.each do |index, cell|
-        #   new_style = cell.style_name
-
-        #   if cur_style != new_style
-        #     add_cell(@x_row.next, cur_style, index-start_cur_index)
-        #     start_cur_index = index
-        #     cur_style = new_style
-        #   end
-        # end
-        # add_cell(new_row, cur_style, @cell_refs.size - start_cur_index )
-
         Row.new(@worksheet, new_row)
       end
 
